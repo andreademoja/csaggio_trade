@@ -8,6 +8,9 @@ class ExecutionEngine:
         orders = []
 
         for signal in signals:
+            if signal == "close" and portfolio.position_size == 0:
+                return []   # non chiudere se non c’è nulla da chiudere
+            
             action = signal["action"]
 
             # Caso 1: chiusura totale

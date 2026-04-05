@@ -4,9 +4,11 @@ class Portfolio:
         self.position_size = 0
         self.position_side = None
         self.entry_price = None
+        self.last_price = None
         self.current_atr = 0
 
     def update(self, t, row, orders):
+        self.last_price = row["close"]
         price = row["close"]
 
         for order in orders:
@@ -14,7 +16,7 @@ class Portfolio:
             self.current_atr = row.get("atr", None)
 
             # Apertura posizione
-            if action == "open":
+            if order["action"] == "open":
                 self.position_side = order["side"]
                 self.position_size = order["size"]
                 self.entry_price = price

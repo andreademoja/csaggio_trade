@@ -16,10 +16,27 @@ class Backtester:
             raise AttributeError("Data object must implement iterrows() or iter_rows()")
 
         for t, row in iterator:
-            signals = self.strategy.generate_signals(t, row)
+            try:
+                signals = self.strategy.generate_signals(t, row, self.portfolio)
+            except TypeError:
+                # Strategia legacy (usata nei test)
+                signals = self.strategy.generate_signals(t, row)
+
             orders = self.execution.process_signals(t, signals, self.portfolio)
-            self.portfolio.update(t, row, orders)
+
+            # 1) PRIMA registro cosa sta succedendo (con la posizione ancora "viva")
             self.reporter.record(t, row, self.portfolio, orders)
 
+            # 2) POI aggiorno il portfolio (chiusure, PnL, reset, ecc.)
+            self.portfolio.update(t, row, orders)
 
-        return self.reporter.finalize()
+        events = self.reporter.finalize()
+
+        # Se il reporter ha un trade_log (runtime reale), restituiscilo
+        # Se non ce l’ha (DummyReporter nei test), restituisci solo events
+        trade_log = getattr(self.reporter, "trade_log", None)
+
+        if trade_log is None:
+            return events
+        else:
+            return events, trade_log
