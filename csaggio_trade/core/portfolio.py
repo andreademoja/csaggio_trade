@@ -4,12 +4,14 @@ class Portfolio:
         self.position_size = 0
         self.position_side = None
         self.entry_price = None
+        self.current_atr = 0
 
     def update(self, t, row, orders):
         price = row["close"]
 
         for order in orders:
             action = order["action"]
+            self.current_atr = row.get("atr", None)
 
             # Apertura posizione
             if action == "open":
@@ -34,3 +36,6 @@ class Portfolio:
         elif self.position_side == "short":
             return (self.entry_price - price) * self.position_size
         return 0
+
+    def get_atr(self):
+        return self.current_atr
