@@ -138,14 +138,10 @@ if max_dd > -1:
 else:
     print("Hai bruciato il conto")
 
-# Salva i risultati:
+# Salva i risultati
+results, trade_log = bt.run()
 pd.DataFrame(results).to_csv("results/backtest_results.csv", index=False)
 print("Risultati salvati in backtest_results.csv")
-
-results, trade_log = bt.run()
-
-# salva equity curve
-pd.DataFrame(results).to_csv("results/backtest_results.csv", index=False)
 
 # salva trade log
 trade_log.save("results/trade_log.csv")
