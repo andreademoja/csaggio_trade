@@ -1,3 +1,23 @@
-pandas>=2.0
-numpy>=1.24
-matplotlib>=3.7
+# Core dependencies for csaggio_trade backtester
+pandas>=2.2.0
+numpy>=1.26.0
+matplotlib>=3.8.0
+plotly>=5.18.0
+
+# Trading & technical analysis
+ta>=0.10.2
+yfinance>=0.2.40
+
+# Backtesting utilities
+backtrader>=1.9.78.123
+vectorbt>=0.26.0
+
+# Development & testing
+pytest>=8.0.0
+pytest-cov>=4.1.0
+
+# Logging & utilities
+python-dotenv>=1.0.0
+
+# Optional but useful
+tqdm>=4.66.0

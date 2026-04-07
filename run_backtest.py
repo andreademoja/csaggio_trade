@@ -8,12 +8,21 @@ from csaggio_trade.core.reporter import Reporter
 from csaggio_trade.core.backtester import Backtester
 
 import pandas as pd
+import logging
+# Logging setup
+from csaggio_trade.logger import setup_logging
+
+setup_logging(level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.info("🚀 Avvio backtest csaggio_trade")
+
+logger = logging.getLogger(__name__)
 
 # -------------------------
 # 1. Loader
 # -------------------------
 loader = DataLoader(
-    path="csaggio_trade/data/raw/GBPJPY.csv",
+    path="csaggio_trade/data/raw/XAUUSD.csv",
     parser=lambda df: df  # per ora nessun parser custom
 )
 
@@ -42,7 +51,7 @@ strategy = MeanReversionStrategy(
 # 4. Risk Manager
 # -------------------------
 risk = RiskManager(
-    risk_per_trade=0.02,
+    risk_per_trade=0.5,
     account_size=2000,
     atr_multiplier=2,
     leverage=500
@@ -139,7 +148,6 @@ else:
     print("Hai bruciato il conto")
 
 # Salva i risultati
-results, trade_log = bt.run()
 pd.DataFrame(results).to_csv("results/backtest_results.csv", index=False)
 print("Risultati salvati in backtest_results.csv")
 

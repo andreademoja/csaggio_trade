@@ -1,3 +1,4 @@
+import logging
 class ExecutionEngine:
     def __init__(self, risk_manager, slippage_model=None, commission_model=None):
         self.risk_manager = risk_manager

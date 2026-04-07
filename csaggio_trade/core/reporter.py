@@ -1,9 +1,14 @@
+import logging
 from csaggio_trade.core.trade_log import TradeLog
+
+
+logger = logging.getLogger(__name__)
 
 class Reporter:
     def __init__(self):
         self.events = []
         self.trade_log = TradeLog()
+        self.logger = logger
 
     def record(self, t, row, portfolio, orders):
         self.events.append({

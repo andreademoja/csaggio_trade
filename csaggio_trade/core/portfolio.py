@@ -1,3 +1,5 @@
+import logging
+
 class Portfolio:
     def __init__(self, initial_equity):
         self.equity = initial_equity
@@ -8,6 +10,7 @@ class Portfolio:
         self.open_price = None  # Prezzo apertura del periodo
         self.last_tick_price = None  # Prezzo ultimo tick
         self.current_atr = 0
+        self.logger = logging.getLogger(__name__)
 
     def update(self, t, row, orders):
         # Ottieni open_price, fallback a close se non disponibile (backwards compatibility)

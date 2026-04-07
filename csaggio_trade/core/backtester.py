@@ -1,3 +1,4 @@
+import logging
 class Backtester:
     def __init__(self, data_handler, strategy, execution_engine, portfolio, reporter):
         self.data = data_handler
@@ -5,6 +6,7 @@ class Backtester:
         self.execution = execution_engine
         self.portfolio = portfolio
         self.reporter = reporter
+        self.logger = logging.getLogger(__name__)
 
     def run(self):
         # Supporta sia pandas (iterrows) che dummy nei test (iter_rows)
