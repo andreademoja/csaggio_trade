@@ -42,7 +42,7 @@ strategy = MeanReversionStrategy(
 # 4. Risk Manager
 # -------------------------
 risk = RiskManager(
-    risk_per_trade=0.2,
+    risk_per_trade=0.02,
     account_size=2000,
     atr_multiplier=2,
     leverage=500

@@ -5,10 +5,15 @@ class Portfolio:
         self.position_side = None
         self.entry_price = None
         self.last_price = None
+        self.open_price = None  # Prezzo apertura del periodo
+        self.last_tick_price = None  # Prezzo ultimo tick
         self.current_atr = 0
 
     def update(self, t, row, orders):
+        # Ottieni open_price, fallback a close se non disponibile (backwards compatibility)
+        self.open_price = row.get("open", row.get("close"))
         self.last_price = row["close"]
+        self.last_tick_price = row["close"]
         price = row["close"]
 
         for order in orders:
