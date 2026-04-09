@@ -12,8 +12,7 @@ class Portfolio:
         self.current_atr = 0
         self.logger = logging.getLogger(__name__)
 
-    def update(self, t, row, orders):
-        # Ottieni open_price, fallback a close se non disponibile (backwards compatibility)
+    def update(self, t, row, orders, commission_model=None):
         self.open_price = row.get("open", row.get("close"))
         self.last_price = row["close"]
         self.last_tick_price = row["close"]
@@ -27,15 +26,24 @@ class Portfolio:
             if order["action"] == "open":
                 self.position_side = order["side"]
                 self.position_size = order["size"]
-                self.entry_price = price
+                # Use slippage-adjusted open price if present
+                self.entry_price = order.get("open_price", price)
+                # Deduct commission on open
+                if commission_model is not None:
+                    commission = commission_model.calculate_commission(self.position_size, self.entry_price)
+                    self.equity -= commission
 
             # Chiusura totale
             elif action == "close_all":
                 if self.position_size != 0:
-                    pnl = self._calculate_pnl(price)
+                    # Use slippage-adjusted exit price if present
+                    exit_price = order.get("exit_price", price)
+                    pnl = self._calculate_pnl(exit_price)
                     self.equity += pnl
-
-                # Reset posizione
+                    # Deduct commission on close
+                    if commission_model is not None:
+                        commission = commission_model.calculate_commission(self.position_size, exit_price)
+                        self.equity -= commission
                 self.position_size = 0
                 self.position_side = None
                 self.entry_price = None

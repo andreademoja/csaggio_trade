@@ -12,25 +12,26 @@ from pathlib import Path
 # Crea la cartella logs se non esiste
 Path("logs").mkdir(exist_ok=True)
 
-def setup_logging(level=logging.INFO):
+
+def setup_logging(level=logging.INFO, log_dir="logs"):
     """
     Configura il logging per tutto il progetto in modo semplice e affidabile.
-    
     Args:
         level: Livello di logging (INFO, DEBUG, WARNING, ERROR)
+        log_dir: Directory dove salvare i log file (default: 'logs')
     """
-    # Configurazione principale
+    log_dir_path = Path(log_dir)
+    log_dir_path.mkdir(exist_ok=True)
+    log_file = log_dir_path / "csaggio_trade.log"
     logging.basicConfig(
         level=level,
         format='%(asctime)s | %(levelname)-8s | %(name)s | %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S',
         handlers=[
-            logging.StreamHandler(sys.stdout),                    # Output su console
-            logging.FileHandler("logs/csaggio_trade.log", 
-                              encoding='utf-8', 
-                              mode='a')                           # Output su file
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler(str(log_file), encoding='utf-8', mode='a')
         ],
-        force=True  # Forza la riconfigurazione (utile quando si ri-esegue)
+        force=True
     )
 
     # Riduce il rumore di librerie esterne
@@ -40,10 +41,7 @@ def setup_logging(level=logging.INFO):
 
     logger = logging.getLogger("csaggio_trade")
     logger.setLevel(level)
-    
-    logger.info("🚀 Logging configurato correttamente (livello: %s)", 
-                logging.getLevelName(level))
-    
+    logger.info("🚀 Logging configurato correttamente (livello: %s)", logging.getLevelName(level))
     return logger
 
 
